@@ -1,0 +1,73 @@
+{
+    "id": "CreationRequestForm",
+    "schemaVersion": "1.1.0",
+    "name": "CreationRequestForm",
+    "revision": "Revision",
+    "type": "task",
+    "readOnly": true,
+    "content": [
+        {
+            "id": "general_info",
+            "type": "section",
+            "title": "General Info",
+            "content": [
+                {
+                    "id": "basic_info",
+                    "type": "subsection",
+                    "title": "Basic Info",
+                    "content": [
+                        {
+                            "id": "name",
+                            "type": "string",
+                            "label": "Name",
+                            "readOnly": true,
+                            "value": "${context.workflow.object.name}",
+                            "constraints": {
+                                "required": false
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "items",
+                    "type": "subsection",
+                    "title": "Items",
+                    "content": [
+                        {
+                            "id": "items",
+                            "type": "collection",
+                            "title": "Items",
+                            "addEnabled": false,
+                            "deleteEnabled": false,
+                            "value": "${context.workflow.object.items}",
+                            "content": [
+                                {
+                                    "id": "name_",
+                                    "type": "string",
+                                    "label": "Item Name ",
+                                    "readOnly": true,
+                                    "value": "${item.name}",
+                                    "constraints": {
+                                        "required": false
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "decisions": [
+        {
+            "id": "approve",
+            "text": "Approve",
+            "decisionType": "positive"
+        },
+        {
+            "id": "reject",
+            "text": "Reject",
+            "decisionType": "negative"
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+### Create Order
+
+POST http://localhost:8080/odata/v4/WorkflowService/Header
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic tester:ProvidedTesterCheck123!
+
+{
+    "name": "Test",
+    "status": "bad",
+    "items":[
+        {
+            "name":"Name"
+        }
+    ]
+}
