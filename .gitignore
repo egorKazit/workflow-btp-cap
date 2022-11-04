@@ -1,0 +1,11 @@
+workflow-java/node_modules/
+workflow-java/srv/target/
+workflow-java/srv/src/main/java/cds/
+workflow-java/db/default-env.json
+workflow-java/xs-security.json
+workflow-java/db/src/gen/
+workflow-java/srv/src/main/resources/edmx/
+workflow-java/reqeusts/
+workflow-java/srv/.classpath
+workflow-java/xs-security.json
+.vscode/

@@ -1,9 +1,0 @@
-### Update Order
-
-POST http://localhost:8080/odata/v4/WorkflowService/Header(f0cf3275-74ce-4894-ab6c-625c70fa459a)/WorkflowService.complete?$expand=items
-Content-Type: application/json
-Authorization: Basic privileged:
-
-{
-    "resolution": "?"
-}

@@ -3,6 +3,7 @@ package com.sap.cap.workflowbtp.handlers;
 import cds.gen.workflowservice.WorkflowService_;
 import cds.gen.workflowservice.Header_;
 import cds.gen.workflowservice.Header;
+import cds.gen.workflowservice.CompleteContext;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ public class HeaderHandler implements EventHandler {
             new ServiceException(ErrorStatuses.NOT_FOUND, "Wrong status for deletion");
     }
 
-    @On(event = "complete", entity = Header_.CDS_NAME)
+    @On(event = CompleteContext.CDS_NAME, entity = Header_.CDS_NAME)
     public void complete(CompleteEventContext completeEventContext) {
         CqnSelect selectStatement = completeEventContext.getCqn();
         Header header = persistenceService.run(selectStatement).first(Header.class)

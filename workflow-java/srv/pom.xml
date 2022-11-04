@@ -136,6 +136,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
+                            <codeOutputDirectory>${project.basedir}/src/main/</codeOutputDirectory>
 							<basePackage>cds.gen</basePackage>
 						</configuration>
 					</execution>

@@ -13,3 +13,6 @@ cds:
             firstName: Main
             lastName: Tester
             email: Klaus.Sussard@mail.com
+          roles:
+            - DatabaseOperator
+            - ClearOperator
