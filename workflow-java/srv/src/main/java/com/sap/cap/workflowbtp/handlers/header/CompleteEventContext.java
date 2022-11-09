@@ -1,4 +1,4 @@
-package com.sap.cap.workflowbtp.handlers;
+package com.sap.cap.workflowbtp.handlers.header;
 
 import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.services.EventContext;
@@ -19,6 +19,5 @@ public interface CompleteEventContext extends EventContext{
 
     // The return value
     void setResult(Header header);
-    Header getResult();
 
 }

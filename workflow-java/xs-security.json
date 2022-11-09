@@ -1,0 +1,31 @@
+{
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.DatabaseOperator",
+      "description": "DatabaseOperator"
+    },
+    {
+      "name": "$XSAPPNAME.ClearOperator",
+      "description": "ClearOperator"
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "DatabaseOperator",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.DatabaseOperator"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "ClearOperator",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.ClearOperator"
+      ],
+      "attribute-references": []
+    }
+  ]
+}

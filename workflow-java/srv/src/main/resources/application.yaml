@@ -6,8 +6,9 @@ cds:
     auto-config.enabled: false
   security:
     mock:
+      defaultUsers: false
       users:
-        - name: tester
+        - name: operator
           password: ProvidedTesterCheck123!
           additional:
             firstName: Main
@@ -15,4 +16,11 @@ cds:
             email: Klaus.Sussard@mail.com
           roles:
             - DatabaseOperator
+        - name: cleaner
+          password: ProvidedTesterCheck123!
+          additional:
+            firstName: Main
+            lastName: Tester
+            email: Klaus.Sussard@mail.com
+          roles:
             - ClearOperator

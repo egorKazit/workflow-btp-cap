@@ -8,3 +8,6 @@ applications:
   disk_quota: 3G
   services:
   - Hana
+  - workflow-trust-man
+  env:
+    JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
