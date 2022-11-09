@@ -12,10 +12,18 @@ service WorkflowService @(requires : 'authenticated-user') {
         restrict     : [
             {
                 grant : [
+                    'CREATE',
                     'READ',
                     'WRITE',
+                    'complete'
                 ],
                 to    : 'DatabaseOperator'
+            },
+            {
+                grant : [
+                    'clearAll'
+                ],
+                to    : 'ClearOperator'
             },
             {
                 grant : ['READ'],
@@ -23,9 +31,7 @@ service WorkflowService @(requires : 'authenticated-user') {
             },
         ]
     )           as projection on db.Header actions {
-        @(requires : 'DatabaseOperator')
         action complete(resolution : String) returns Header;
-        @(requires : 'ClearOperator')
         action clearAll();
     }
 

@@ -1,4 +1,4 @@
-package com.sap.cap.workflowbtp.handlers;
+package com.sap.cap.workflowbtp.handlers.item;
 
 import java.util.List;
 
@@ -15,9 +15,10 @@ import cds.gen.workflowservice.WorkflowService_;
 
 @Service
 @ServiceName(WorkflowService_.CDS_NAME)
-public class ItemHandler implements EventHandler{
-    
+public class ItemHandler implements EventHandler {
+
     @Before(event = CdsService.EVENT_CREATE, entity = Item_.CDS_NAME)
+    @SuppressWarnings("unused")
     public void beforeCreate(List<Item> items) {
     }
 
