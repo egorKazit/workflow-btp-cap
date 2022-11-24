@@ -1,5 +1,7 @@
 spring:
-  web.resources.static-locations: file:./app/
+  web.resources.static-locations: "file:./app"
+  jmx:
+    enabled: true
 cds:
   datasource:
     auto-config.enabled: false

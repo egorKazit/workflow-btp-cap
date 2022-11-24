@@ -38,3 +38,4 @@ service WorkflowService @(requires : 'authenticated-user') {
     @readonly
     entity Item as projection on db.Item;
 }
+
