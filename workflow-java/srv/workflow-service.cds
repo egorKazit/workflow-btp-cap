@@ -15,14 +15,13 @@ service WorkflowService @(requires : 'authenticated-user') {
                     'CREATE',
                     'READ',
                     'WRITE',
-                    'complete'
+                    'complete',
+                    'startWorkflow'
                 ],
                 to    : 'DatabaseOperator'
             },
             {
-                grant : [
-                    'clearAll'
-                ],
+                grant : ['clearAll'],
                 to    : 'ClearOperator'
             },
             {
@@ -30,12 +29,20 @@ service WorkflowService @(requires : 'authenticated-user') {
                 where : 'CreatedBy = $user'
             },
         ]
-    )           as projection on db.Header actions {
+    )           as projection on db.Header {
+        *,
+        @readonly ID,
+        @readonly resolution,
+        @readonly status,
+    } actions {
+        @sap.applicable.path : 'startWorkflow'
+        action startWorkflow()               returns Header;
         action complete(resolution : String) returns Header;
         action clearAll();
     }
 
-    @readonly
-    entity Item as projection on db.Item;
+    entity Item as projection on db.Item {
+        *,
+        @readonly ID,
+    };
 }
-

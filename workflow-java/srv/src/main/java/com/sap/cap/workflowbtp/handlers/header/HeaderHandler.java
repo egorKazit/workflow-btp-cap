@@ -4,6 +4,7 @@ import cds.gen.workflowservice.WorkflowService_;
 import cds.gen.workflowservice.Header_;
 import cds.gen.workflowservice.Header;
 import cds.gen.workflowservice.CompleteContext;
+import cds.gen.workflowservice.StartWorkflowContext;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.handler.EventHandler;
+import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
@@ -25,8 +27,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 /**
- * Header handler.
- * The class is aimed to handle main operation like data enhancements before create/update or prevent deletion
+ * Header handler. The class is aimed to handle main operation like data
+ * enhancements before create/update or prevent deletion
  */
 @Service
 @ServiceName(WorkflowService_.CDS_NAME)
@@ -35,8 +37,7 @@ public class HeaderHandler implements EventHandler {
     private final PersistenceService persistenceService;
 
     /**
-     * Main constructor.
-     * Create to inject the services
+     * Main constructor. Create to inject the services
      *
      * @param persistenceService persistence service injection
      */
@@ -55,6 +56,12 @@ public class HeaderHandler implements EventHandler {
         headers.forEach(header -> header.setStatus("In Progress"));
     }
 
+    @After(event = CdsService.EVENT_READ, entity = Header_.CDS_NAME)
+    @SuppressWarnings("unused")
+    public void afterRead(@NotNull List<Header> headers) {
+        headers.forEach(header -> header.setStartWorkflowEnabled("In Progress".equals(header.getStatus())));
+    }
+
     /**
      * The method to check data before update
      *
@@ -64,11 +71,14 @@ public class HeaderHandler implements EventHandler {
     @SuppressWarnings("unused")
     public void beforeUpdate(@NotNull List<Header> headers) {
         List<String> headerIds = headers.stream().map(Header::getId).collect(Collectors.toList());
-        CqnSelect persistHeaderQuery = Select.from(Header_.class).columns(Header_::ID, Header_::status).where(b -> b.ID().in(headerIds));
+        CqnSelect persistHeaderQuery = Select.from(Header_.class).columns(Header_::ID, Header_::status)
+                .where(b -> b.ID().in(headerIds));
         List<Header> persistHeaders = persistenceService.run(persistHeaderQuery).listOf(Header.class);
         headers.forEach(header -> {
-            if (persistHeaders.stream().anyMatch(headerToCheck -> headerToCheck.getId().equals(header.getId()) && headerToCheck.getStatus().equals("Completed"))) {
-                throw new ServiceException(ErrorStatuses.FORBIDDEN, "Requests can not be edited in \"Complete\" status");
+            if (persistHeaders.stream().anyMatch(headerToCheck -> headerToCheck.getId().equals(header.getId())
+                    && headerToCheck.getStatus().equals("Completed"))) {
+                throw new ServiceException(ErrorStatuses.FORBIDDEN,
+                        "Requests can not be edited in \"Complete\" status");
             }
             header.setStatus("Under Review");
         });
@@ -87,8 +97,7 @@ public class HeaderHandler implements EventHandler {
     }
 
     /**
-     * Complete action.
-     * It marks all incoming request as completed
+     * Complete action. It marks all incoming request as completed
      *
      * @param completeEventContext interface for completed action context
      */
@@ -100,10 +109,26 @@ public class HeaderHandler implements EventHandler {
                 .orElseThrow(() -> new ServiceException(ErrorStatuses.NOT_FOUND, "Request not found"));
         header.setStatus("Completed");
         header.setResolution(completeEventContext.getResolution());
-        CqnUpdate updateStatement = Update.entity(Header_.class)
-                .data(header).where(b -> b.ID().eq(header.getId()));
+        CqnUpdate updateStatement = Update.entity(Header_.class).data(header).where(b -> b.ID().eq(header.getId()));
         persistenceService.run(updateStatement);
         completeEventContext.setResult(header);
+    }
+
+    /**
+     * Complete action. It marks all incoming request as completed
+     *
+     * @param completeEventContext interface for completed action context
+     */
+    @On(event = StartWorkflowContext.CDS_NAME, entity = Header_.CDS_NAME)
+    @SuppressWarnings("unused")
+    public void startWorkflow(@NotNull StartWorkflowEventContext startWorkflowEventContext) {
+        CqnSelect selectStatement = startWorkflowEventContext.getCqn();
+        Header header = persistenceService.run(selectStatement).first(Header.class)
+                .orElseThrow(() -> new ServiceException(ErrorStatuses.NOT_FOUND, "Request not found"));
+        header.setStatus("In Approval");
+        CqnUpdate updateStatement = Update.entity(Header_.class).data(header).where(b -> b.ID().eq(header.getId()));
+        persistenceService.run(updateStatement);
+        startWorkflowEventContext.setResult(header);
     }
 
 }
